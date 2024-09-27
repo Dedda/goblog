@@ -1,15 +1,16 @@
 package main
 
 import (
-	"bytes"
+	"github.com/Dedda/goblog/assets"
 	"github.com/Dedda/goblog/pages"
-	"log"
 	"net/http"
 )
 
 func startServer(address string) error {
 	serveMux := http.NewServeMux()
-	serveMux.HandleFunc("/articles/{$}", reqArticleList)
+	serveMux.HandleFunc("GET /{$}", pages.Index)
+	serveMux.HandleFunc("GET /articles/{$}", articleList)
+	serveMux.HandleFunc("GET /assets/style.css", assets.StyleCSS)
 	server := &http.Server{
 		Handler: serveMux,
 		Addr:    address,
@@ -17,21 +18,6 @@ func startServer(address string) error {
 	return server.ListenAndServe()
 }
 
-func reqArticleList(writer http.ResponseWriter, request *http.Request) {
-	buf := bytes.Buffer{}
-	articles, err := articleProvider.ListArticles()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = pages.ArticleListTemplate.Render(&buf, &pages.ArticleListPage{
-		Articles: articles,
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = writer.Write(buf.Bytes())
-	if err != nil {
-		log.Fatal(err)
-	}
-	writer.Header().Set("Content-Type", "text/html; charset=utf-8")
+func articleList(writer http.ResponseWriter, request *http.Request) {
+	pages.ArticleList(articleProvider, writer, request)
 }
