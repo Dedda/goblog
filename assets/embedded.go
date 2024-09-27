@@ -12,9 +12,9 @@ var (
 )
 
 func StyleCSS(writer http.ResponseWriter, _ *http.Request) {
+	writer.Header().Set("Content-Type", "text/css; charset=utf-8")
 	_, err := writer.Write(W3BlogCss)
 	if err != nil {
 		log.Fatal(err)
 	}
-	writer.Header().Add("Content-Type", "text/css; charset=utf-8")
 }
