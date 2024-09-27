@@ -22,6 +22,10 @@ var (
 	//go:embed templates/article_list.tmpl.html
 	article_list_html   string
 	articleListTemplate = tmpl.MustCompile(&articleListPage{})
+
+	//go:embed templates/article.tmpl.html
+	article_html    string
+	articleTemplate = tmpl.MustCompile(&articlePage{})
 )
 
 func wrapContents(contents []byte) []byte {
@@ -88,4 +92,38 @@ type articleListPage struct {
 
 func (*articleListPage) TemplateText() string {
 	return article_list_html
+}
+
+func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter, req *http.Request) {
+	id := req.PathValue("id")
+	if id == "" {
+		log.Fatal("Empty article id")
+	}
+	a, err := articleProvider.RenderArticle(id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	page := articlePage{
+		Meta:     &a.Meta,
+		Rendered: template.HTML(*a.Rendered),
+	}
+	buf := bytes.Buffer{}
+	err = articleTemplate.Render(&buf, &page)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = writer.Write(wrapContents(buf.Bytes()))
+	if err != nil {
+		log.Fatal(err)
+	}
+	writer.Header().Set("Content-Type", "text/html; charset=utf-8")
+}
+
+type articlePage struct {
+	Meta     *article.ArticleMetaInfo
+	Rendered template.HTML
+}
+
+func (*articlePage) TemplateText() string {
+	return article_html
 }
