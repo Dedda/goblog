@@ -26,8 +26,7 @@ func newArticleRenderCache() *articleRenderCache {
 	}
 }
 
-func (c *articleRenderCache) renderAndGet(fileName string) (*[]byte, error) {
-	filePath := "articles/" + fileName
+func (c *articleRenderCache) renderAndGet(filePath string) (*[]byte, error) {
 	found, ok := c.getCached(filePath)
 	if !ok {
 		found, err := c.readFromDisk(filePath)
@@ -50,10 +49,10 @@ func (c *articleRenderCache) renderAndGet(fileName string) (*[]byte, error) {
 	return &found.data, err
 }
 
-func (c *articleRenderCache) getCached(fileName string) (renderedArticleInfo, bool) {
+func (c *articleRenderCache) getCached(filePath string) (renderedArticleInfo, bool) {
 	c.mutex.RLock()
 	defer c.mutex.RUnlock()
-	article, ok := c.articleFiles[fileName]
+	article, ok := c.articleFiles[filePath]
 	return article, ok
 }
 

@@ -11,7 +11,11 @@ var (
 )
 
 func main() {
-	articleProvider = &dummyArticleProvider{}
+	provider, err := article.NewFileSystemArticleProvider("./articles") //&dummyArticleProvider{}
+	if err != nil {
+		log.Fatal(err)
+	}
+	articleProvider = provider
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
