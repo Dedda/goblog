@@ -2,11 +2,23 @@ package pages
 
 import (
 	_ "embed"
+	"fmt"
 	"github.com/Dedda/goblog/article"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
+	"time"
 )
+
+func responseErr(err error, writer http.ResponseWriter) {
+	_, e := fmt.Fprintf(os.Stderr, "[ERROR] %s: %s", time.Now().Format(time.RFC3339), err)
+	if e != nil {
+		log.Fatal(e)
+	}
+	writer.Header().Set("Content-Type", "text/html; charset=utf-8")
+	writer.WriteHeader(http.StatusInternalServerError)
+}
 
 func responseOk(data []byte, writer http.ResponseWriter) {
 	writer.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -38,7 +50,8 @@ func (*wrapperPage) TemplateText() string {
 func Index(writer http.ResponseWriter, _ *http.Request) {
 	data, err := render(indexTemplate, &indexPage{})
 	if err != nil {
-		log.Fatal(err)
+		responseErr(err, writer)
+		return
 	}
 	responseOk(wrapContents(data), writer)
 }
@@ -52,13 +65,15 @@ func (*indexPage) TemplateText() string {
 func ArticleList(articleProvider article.ArticleProvider, writer http.ResponseWriter, _ *http.Request) {
 	articles, err := articleProvider.ListArticles()
 	if err != nil {
-		log.Fatal(err)
+		responseErr(err, writer)
+		return
 	}
 	data, err := render(articleListTemplate, &articleListPage{
 		Articles: articles,
 	})
 	if err != nil {
-		log.Fatal(err)
+		responseErr(err, writer)
+		return
 	}
 	responseOk(wrapContents(data), writer)
 }
@@ -71,14 +86,11 @@ func (*articleListPage) TemplateText() string {
 	return article_list_html
 }
 
-func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter, req *http.Request) {
-	id := req.PathValue("id")
-	if id == "" {
-		log.Fatal("Empty article id")
-	}
+func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter, id string) {
 	a, err := articleProvider.RenderArticle(id)
 	if err != nil {
-		log.Fatal(err)
+		responseErr(err, writer)
+		return
 	}
 	page := articlePage{
 		Meta:     &a.Meta,
@@ -86,7 +98,8 @@ func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter
 	}
 	data, err := render(articleTemplate, &page)
 	if err != nil {
-		log.Fatal(err)
+		responseErr(err, writer)
+		return
 	}
 	responseOk(wrapContents(data), writer)
 }

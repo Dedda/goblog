@@ -24,5 +24,5 @@ func articleList(writer http.ResponseWriter, request *http.Request) {
 }
 
 func articlePage(writer http.ResponseWriter, request *http.Request) {
-	pages.Article(articleProvider, writer, request)
+	pages.Article(articleProvider, writer, request.PathValue("id"))
 }
