@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+type ArticleCategory struct {
+	Id       string            `json:"id"`
+	Title    string            `json:"title"`
+	Articles []ArticleMetaInfo `json:"articles"`
+}
+
 type ArticleMetaInfo struct {
 	Id         string    `json:"id"`
 	Title      string    `json:"title"`
@@ -17,7 +23,8 @@ type RenderedArticle struct {
 }
 
 type ArticleProvider interface {
-	ListArticles() ([]*ArticleMetaInfo, error)
-	GetArticle(id string) (*ArticleMetaInfo, error)
-	RenderArticle(id string) (RenderedArticle, error)
+	ListCategories() ([]*ArticleCategory, error)
+	ListArticles(category string) ([]*ArticleMetaInfo, error)
+	GetArticle(category, id string) (*ArticleMetaInfo, error)
+	RenderArticle(category, id string) (RenderedArticle, error)
 }

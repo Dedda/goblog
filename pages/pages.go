@@ -47,8 +47,15 @@ func (*wrapperPage) TemplateText() string {
 	return wrapper_html
 }
 
-func Index(writer http.ResponseWriter, _ *http.Request) {
-	data, err := render(indexTemplate, &indexPage{})
+func Index(articleProvider article.ArticleProvider, writer http.ResponseWriter, _ *http.Request) {
+	categories, err := articleProvider.ListCategories()
+	if err != nil {
+		responseErr(err, writer)
+		return
+	}
+	data, err := render(indexTemplate, &indexPage{
+		Categories: categories,
+	})
 	if err != nil {
 		responseErr(err, writer)
 		return
@@ -56,19 +63,22 @@ func Index(writer http.ResponseWriter, _ *http.Request) {
 	responseOk(wrapContents(data), writer)
 }
 
-type indexPage struct{}
+type indexPage struct {
+	Categories []*article.ArticleCategory
+}
 
 func (*indexPage) TemplateText() string {
 	return index_html
 }
 
-func ArticleList(articleProvider article.ArticleProvider, writer http.ResponseWriter, _ *http.Request) {
-	articles, err := articleProvider.ListArticles()
+func ArticleList(articleProvider article.ArticleProvider, writer http.ResponseWriter, _ *http.Request, category string) {
+	articles, err := articleProvider.ListArticles(category)
 	if err != nil {
 		responseErr(err, writer)
 		return
 	}
 	data, err := render(articleListTemplate, &articleListPage{
+		Category: category,
 		Articles: articles,
 	})
 	if err != nil {
@@ -79,6 +89,7 @@ func ArticleList(articleProvider article.ArticleProvider, writer http.ResponseWr
 }
 
 type articleListPage struct {
+	Category string
 	Articles []*article.ArticleMetaInfo
 }
 
@@ -86,13 +97,14 @@ func (*articleListPage) TemplateText() string {
 	return article_list_html
 }
 
-func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter, id string) {
-	a, err := articleProvider.RenderArticle(id)
+func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter, category, id string) {
+	a, err := articleProvider.RenderArticle(category, id)
 	if err != nil {
 		responseErr(err, writer)
 		return
 	}
 	page := articlePage{
+		Category: category,
 		Meta:     &a.Meta,
 		Rendered: template.HTML(*a.Rendered),
 	}
@@ -105,6 +117,7 @@ func Article(articleProvider article.ArticleProvider, writer http.ResponseWriter
 }
 
 type articlePage struct {
+	Category string
 	Meta     *article.ArticleMetaInfo
 	Rendered template.HTML
 }

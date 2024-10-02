@@ -1,6 +1,12 @@
 [
   {
-    "id": "go-tut-01",
-    "title": "Variables and Constants"
+    "id": "go-tut",
+    "title": "Go Tutorial",
+    "articles": [
+      {
+        "id": "go-tut-01",
+        "title": "Variables and constants"
+      }
+    ]
   }
 ]

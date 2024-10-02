@@ -8,41 +8,66 @@ import (
 )
 
 type FileSystemArticleProvider struct {
-	directory string
-	articles  []ArticleMetaInfo
-	cache     *articleRenderCache
+	directory  string
+	categories []ArticleCategory
+	cache      *articleRenderCache
 }
 
 func NewFileSystemArticleProvider(directory string) (*FileSystemArticleProvider, error) {
-	var meta []ArticleMetaInfo
+	var categories []ArticleCategory
 	raw, err := os.ReadFile(directory + "/articles.json")
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(raw, &meta)
-	for i, _ := range meta {
-		m := &meta[i]
-		m.mdFilename = fmt.Sprintf("%s/%s.md", directory, m.Id)
+	err = json.Unmarshal(raw, &categories)
+	articles := 0
+	for _, category := range categories {
+		for i, _ := range category.Articles {
+			m := &category.Articles[i]
+			m.mdFilename = fmt.Sprintf("%s/%s/%s.md", directory, category.Id, m.Id)
+			articles += 1
+		}
 	}
-	fmt.Printf("Found %d article entries.", len(meta))
+	fmt.Printf("Found %d article entries in %d categories.", articles, len(categories))
 	provider := FileSystemArticleProvider{
-		directory: directory,
-		articles:  meta,
-		cache:     newArticleRenderCache(),
+		directory:  directory,
+		categories: categories,
+		cache:      newArticleRenderCache(),
 	}
 	return &provider, err
 }
 
-func (f FileSystemArticleProvider) ListArticles() ([]*ArticleMetaInfo, error) {
-	articles := make([]*ArticleMetaInfo, len(f.articles))
-	for i, meta := range f.articles {
+func (f *FileSystemArticleProvider) getCategory(id string) (*ArticleCategory, error) {
+	for _, category := range f.categories {
+		if category.Id == id {
+			return &category, nil
+		}
+	}
+	return nil, errors.New("Category not found")
+}
+
+func (f *FileSystemArticleProvider) ListCategories() ([]*ArticleCategory, error) {
+	categories := make([]*ArticleCategory, len(f.categories))
+	for i, c := range f.categories {
+		categories[i] = &c
+	}
+	return categories, nil
+}
+
+func (f *FileSystemArticleProvider) ListArticles(category string) ([]*ArticleMetaInfo, error) {
+	c, err := f.getCategory(category)
+	if err != nil {
+		return nil, err
+	}
+	articles := make([]*ArticleMetaInfo, len(c.Articles))
+	for i, meta := range c.Articles {
 		articles[i] = &meta
 	}
 	return articles, nil
 }
 
-func (f FileSystemArticleProvider) GetArticle(id string) (*ArticleMetaInfo, error) {
-	articles, err := f.ListArticles()
+func (f *FileSystemArticleProvider) GetArticle(category, id string) (*ArticleMetaInfo, error) {
+	articles, err := f.ListArticles(category)
 	if err != nil {
 		return nil, err
 	}
@@ -54,8 +79,8 @@ func (f FileSystemArticleProvider) GetArticle(id string) (*ArticleMetaInfo, erro
 	return nil, nil
 }
 
-func (f FileSystemArticleProvider) RenderArticle(id string) (RenderedArticle, error) {
-	meta, err := f.GetArticle(id)
+func (f *FileSystemArticleProvider) RenderArticle(category, id string) (RenderedArticle, error) {
+	meta, err := f.GetArticle(category, id)
 	if err != nil {
 		return RenderedArticle{}, err
 	}
