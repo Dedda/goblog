@@ -12,6 +12,7 @@ func startServer(address string) error {
 	serveMux.HandleFunc("GET /articles/{$}", articleList)
 	serveMux.HandleFunc("GET /article/{id}", articlePage)
 	serveMux.HandleFunc("GET /assets/style.css", assets.StyleCSS)
+	serveMux.HandleFunc("GET /assets/extras.css", assets.ExtrasCSS)
 	server := &http.Server{
 		Handler: serveMux,
 		Addr:    address,

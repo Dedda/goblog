@@ -20,7 +20,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	if err := startServer(":" + port); err != nil {
+	if err = startServer(":" + port); err != nil {
 		log.Fatal(err)
 	}
 }
