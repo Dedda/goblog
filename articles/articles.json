@@ -4,6 +4,10 @@
     "title": "Go Tutorial",
     "articles": [
       {
+        "id": "go-tut-00",
+        "title": "Hello, World!"
+      },
+      {
         "id": "go-tut-01",
         "title": "Variables and constants",
         "created": "03.10.2024"
