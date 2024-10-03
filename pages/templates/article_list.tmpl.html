@@ -4,7 +4,7 @@
 </header>
 {{ range $article := .Articles -}}
 <div class="w3-card-4 w3-container w3-margin w3-white">
-    <a href="/article/{{ $.Category }}/{{ $article.Id }}"><h3><b>{{ $article.Title }}</b></h3></a>
+    <a href="/article/{{ $.Category.Id }}/{{ $article.Id }}"><h3><b>{{ $article.Title }}</b></h3></a>
     {{ if $article.Created.Time.IsZero }}
     {{ else }}
     <h5>Published on {{ call $.FormatDate $article.Created }}</h5>
