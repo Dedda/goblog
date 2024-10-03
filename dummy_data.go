@@ -10,14 +10,18 @@ type dummyArticleProvider struct{}
 func (d dummyArticleProvider) ListArticles() ([]*article.ArticleMetaInfo, error) {
 	articles := []*article.ArticleMetaInfo{
 		{
-			Id:      "1",
-			Title:   "Article 1",
-			Created: time.Now(),
+			Id:    "1",
+			Title: "Article 1",
+			Created: article.Date{
+				Time: time.Now(),
+			},
 		},
 		{
-			Id:      "2",
-			Title:   "Article 2",
-			Created: time.Now(),
+			Id:    "2",
+			Title: "Article 2",
+			Created: article.Date{
+				Time: time.Now(),
+			},
 		},
 	}
 	return articles, nil

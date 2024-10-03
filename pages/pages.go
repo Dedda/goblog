@@ -78,8 +78,9 @@ func ArticleList(articleProvider article.ArticleProvider, writer http.ResponseWr
 		return
 	}
 	data, err := render(articleListTemplate, &articleListPage{
-		Category: category,
-		Articles: articles,
+		Category:   category,
+		Articles:   articles,
+		FormatDate: FormatDate,
 	})
 	if err != nil {
 		responseErr(err, writer)
@@ -89,8 +90,9 @@ func ArticleList(articleProvider article.ArticleProvider, writer http.ResponseWr
 }
 
 type articleListPage struct {
-	Category string
-	Articles []*article.ArticleMetaInfo
+	Category   string
+	Articles   []*article.ArticleMetaInfo
+	FormatDate func(date article.Date) string
 }
 
 func (*articleListPage) TemplateText() string {
@@ -124,4 +126,12 @@ type articlePage struct {
 
 func (*articlePage) TemplateText() string {
 	return article_html
+}
+
+func FormatDate(date article.Date) string {
+	if date.Time.IsZero() {
+		return ""
+	} else {
+		return date.Time.Format("02.01.2006")
+	}
 }
