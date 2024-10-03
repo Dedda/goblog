@@ -37,6 +37,7 @@ type RenderedArticle struct {
 
 type ArticleProvider interface {
 	ListCategories() ([]*ArticleCategory, error)
+	GetCategory(id string) (*ArticleCategory, error)
 	ListArticles(category string) ([]*ArticleMetaInfo, error)
 	GetArticle(category, id string) (*ArticleMetaInfo, error)
 	RenderArticle(category, id string) (RenderedArticle, error)

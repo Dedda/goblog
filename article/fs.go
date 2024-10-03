@@ -37,15 +37,6 @@ func NewFileSystemArticleProvider(directory string) (*FileSystemArticleProvider,
 	return &provider, err
 }
 
-func (f *FileSystemArticleProvider) getCategory(id string) (*ArticleCategory, error) {
-	for _, category := range f.categories {
-		if category.Id == id {
-			return &category, nil
-		}
-	}
-	return nil, errors.New("Category not found")
-}
-
 func (f *FileSystemArticleProvider) ListCategories() ([]*ArticleCategory, error) {
 	categories := make([]*ArticleCategory, len(f.categories))
 	for i, c := range f.categories {
@@ -54,8 +45,17 @@ func (f *FileSystemArticleProvider) ListCategories() ([]*ArticleCategory, error)
 	return categories, nil
 }
 
+func (f *FileSystemArticleProvider) GetCategory(id string) (*ArticleCategory, error) {
+	for _, c := range f.categories {
+		if c.Id == id {
+			return &c, nil
+		}
+	}
+	return nil, errors.New("Category not found")
+}
+
 func (f *FileSystemArticleProvider) ListArticles(category string) ([]*ArticleMetaInfo, error) {
-	c, err := f.getCategory(category)
+	c, err := f.GetCategory(category)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (f *FileSystemArticleProvider) GetArticle(category, id string) (*ArticleMet
 			return a, nil
 		}
 	}
-	return nil, nil
+	return nil, errors.New("Article not found")
 }
 
 func (f *FileSystemArticleProvider) RenderArticle(category, id string) (RenderedArticle, error) {
