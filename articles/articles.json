@@ -6,13 +6,20 @@
       {
         "id": "go-tut-00",
         "title": "Hello, World!",
+        "created": "03.10.2024",
         "next": "go-tut-01"
       },
       {
         "id": "go-tut-01",
+        "title": "Basic structure of a Go program",
+        "created": "04.10.2024",
+        "prev": "go-tut-00",
+        "next": "go-tut-02"
+      },
+      {
+        "id": "go-tut-02",
         "title": "Variables and constants",
-        "created": "03.10.2024",
-        "prev": "go-tut-00"
+        "prev": "go-tut-01"
       }
     ]
   }

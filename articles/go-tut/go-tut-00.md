@@ -66,5 +66,4 @@ Right now it will just print `Hello, World!` to the console. That is cool but tr
 you instead of the whole world. And maybe add a second line to the output where it says `Goodbye!`. You have now
 successfully created your first "complete" go program!
 
-In the next lesson, we will look at variables and constants to make working with values a lot more comfortable in the
-future.
+In the next lesson, we will have a closer look at the example above and i will explain to you what every line does.
