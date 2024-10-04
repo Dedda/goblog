@@ -27,6 +27,8 @@ type ArticleMetaInfo struct {
 	Id         string `json:"id"`
 	Title      string `json:"title"`
 	Created    Date   `json:"created,omitempty"`
+	Next       string `json:"next,omitempty"`
+	Prev       string `json:"prev,omitempty"`
 	mdFilename string
 }
 

@@ -5,12 +5,14 @@
     "articles": [
       {
         "id": "go-tut-00",
-        "title": "Hello, World!"
+        "title": "Hello, World!",
+        "next": "go-tut-01"
       },
       {
         "id": "go-tut-01",
         "title": "Variables and constants",
-        "created": "03.10.2024"
+        "created": "03.10.2024",
+        "prev": "go-tut-00"
       }
     ]
   }
