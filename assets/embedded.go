@@ -12,6 +12,9 @@ var (
 
 	//go:embed extras.css
 	extrasCss []byte
+
+	//go:embed chroma-github.css
+	syntaxGithubCss []byte
 )
 
 func StyleCSS(writer http.ResponseWriter, _ *http.Request) {
@@ -25,6 +28,14 @@ func StyleCSS(writer http.ResponseWriter, _ *http.Request) {
 func ExtrasCSS(writer http.ResponseWriter, _ *http.Request) {
 	writer.Header().Set("Content-Type", "text/css; charset=utf-8")
 	_, err := writer.Write(extrasCss)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func SyntaxGithubCSS(writer http.ResponseWriter, _ *http.Request) {
+	writer.Header().Set("Content-Type", "text/css; charset=utf-8")
+	_, err := writer.Write(syntaxGithubCss)
 	if err != nil {
 		log.Fatal(err)
 	}
