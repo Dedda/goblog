@@ -19,7 +19,15 @@
       {
         "id": "go-tut-02",
         "title": "Variables and constants",
-        "prev": "go-tut-01"
+        "created": "04.10.2024",
+        "prev": "go-tut-01",
+        "next": "go-tut-03"
+      },
+      {
+        "id": "go-tut-03",
+        "title": "Functions",
+        "created": "05.10.2024",
+        "prev": "go-tut-02"
       }
     ]
   }

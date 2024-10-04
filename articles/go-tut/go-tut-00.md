@@ -62,6 +62,8 @@ Go ahead and build your program to get your first executable!
 $ go build .
 ```
 
+You can also compile and run your program with `go run .`
+
 Right now it will just print `Hello, World!` to the console. That is cool but try adjusting the code so it greets only
 you instead of the whole world. And maybe add a second line to the output where it says `Goodbye!`. You have now
 successfully created your first "complete" go program!
