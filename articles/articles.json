@@ -27,7 +27,14 @@
         "id": "go-tut-03",
         "title": "Functions",
         "created": "05.10.2024",
-        "prev": "go-tut-02"
+        "prev": "go-tut-02",
+        "next": "go-tut-04"
+      },
+      {
+        "id": "go-tut-04",
+        "title": "Conditionals",
+        "created": "07.10.2024",
+        "prev": "go-tut-03"
       }
     ]
   }

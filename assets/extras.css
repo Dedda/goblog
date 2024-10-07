@@ -37,3 +37,23 @@ p > code {
     border-color: var(--code-background-color);
     padding: 0.1em 0.3em;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: solid 2px #3a3a3a;
+}
+
+th, td {
+    padding: 0.1em 0.3em;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+tr:nth-child(odd) {
+    background-color: #cccccc;
+}
